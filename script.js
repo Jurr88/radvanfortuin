@@ -45,6 +45,8 @@ function drawWheel() {
     ctx.setTransform(1, 0, 0, 1, 0, 0);
 }
 
+}
+
 function spinWheel() {
     if (!spinning) {
         spinning = true;
