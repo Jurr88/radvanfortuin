@@ -1,6 +1,8 @@
 const canvas = document.getElementById('wheelCanvas');
 const ctx = canvas.getContext('2d');
-const canvasSize = 320;
+const canvasSize = Math.min(window.innerWidth, window.innerHeight) * 0.9;
+canvas.width = canvasSize;
+canvas.height = canvasSize;
 
 const movies = [
     'The Tunnel',
