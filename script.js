@@ -36,6 +36,7 @@ function drawWheel() {
 
     ctx.setTransform(1, 0, 0, 1, 0, 0);
 }
+
 function spinWheel() {
     if (!spinning) {
         spinning = true;
@@ -50,4 +51,14 @@ function spinWheel() {
             }
         };
         spin();
-   
+    }
+}
+
+// Click- en touchondersteuning
+canvas.addEventListener('click', spinWheel);
+canvas.addEventListener('touchstart', (e) => {
+    e.preventDefault();
+    spinWheel();
+});
+
+drawWheel();
