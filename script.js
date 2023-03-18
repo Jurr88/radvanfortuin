@@ -30,4 +30,54 @@ function spinWheel() {
 
     function animate(timestamp) {
         if (!startTimestamp) startTimestamp = timestamp;
-        let progress =
+        let progress = timestamp - startTimestamp;
+        let easeOutCubic = t => (--t) * t * t + 1;
+
+        rotation += (targetRotation - rotation) * easeOutCubic(progress / spinDuration);
+
+        if (progress < spinDuration) {
+            requestAnimationFrame(animate);
+        } else {
+            rotation = targetRotation;
+            spinning = false;
+        }
+    }
+
+    requestAnimationFrame(animate);
+}
+
+function drawWheel() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.translate(canvas.width / 2, canvas.height / 2);
+    ctx.rotate(rotation);
+
+    for (let i = 0; i < movies.length; i++) {
+        ctx.save();
+        ctx.rotate((2 * Math.PI * i) / movies.length);
+        ctx.fillStyle = i % 2 === 0 ? '#f00' : '#0f0';
+        ctx.beginPath();
+        ctx.moveTo(0, 0);
+        ctx.arc(0, 0, canvas.width / 2, 0, (2 * Math.PI) / movies.length);
+        ctx.lineTo(0, 0);
+        ctx.fill();
+        ctx.closePath();
+
+        ctx.fillStyle = "#000";
+        ctx.textAlign = "center";
+        ctx.textBaseline = "middle";
+        ctx.font = "14px Arial";
+        ctx.rotate((Math.PI + (2 * Math.PI * i) / movies.length) / 2);
+        ctx.fillText(movies[i], canvas.width / 4, 0);
+
+        ctx.restore();
+    }
+
+    ctx.setTransform(1, 0, 0, 1, 0, 0);
+}
+
+function gameLoop() {
+    drawWheel();
+    requestAnimationFrame(gameLoop);
+}
+
+gameLoop();
