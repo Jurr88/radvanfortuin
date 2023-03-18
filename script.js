@@ -24,8 +24,8 @@ canvas.addEventListener('click', () => {
 });
 
 function spinWheel() {
-    let targetRotation = rotation + 10 * Math.PI + (Math.random() * 10 * Math.PI);
-    let spinDuration = 5000;
+    let targetRotation = rotation + 5 * Math.PI + (Math.random() * 5 * Math.PI);
+    let spinDuration = 10000; // Verleng de draaitijd voor meer spanning
     let startTimestamp = null;
 
     function animate(timestamp) {
@@ -40,10 +40,16 @@ function spinWheel() {
         } else {
             rotation = targetRotation;
             spinning = false;
+            announceSelectedMovie(); // Toon de geselecteerde film
         }
     }
 
     requestAnimationFrame(animate);
+}
+
+function announceSelectedMovie() {
+    let selectedMovieIndex = Math.floor(((rotation % (2 * Math.PI)) / (2 * Math.PI)) * movies.length);
+    alert('Gefeliciteerd! De geselecteerde film is: ' + movies[selectedMovieIndex]);
 }
 
 function drawWheel() {
@@ -65,7 +71,7 @@ function drawWheel() {
         ctx.fillStyle = "#000";
         ctx.textAlign = "center";
         ctx.textBaseline = "middle";
-        ctx.font = "14px Arial";
+        ctx.font = "bold 14px 'Creepster', cursive"; // Gebruik een enger lettertype
         ctx.rotate(((2 * Math.PI) / movies.length) / 2);
         ctx.fillText(movies[i], canvas.width / 4, 0);
 
@@ -73,6 +79,7 @@ function drawWheel() {
     }
 
     ctx.setTransform(1, 0, 0, 1, 0, 0);
+}
 }
 
 function gameLoop() {
