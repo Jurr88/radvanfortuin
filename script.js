@@ -1,6 +1,6 @@
 const canvas = document.getElementById('wheelCanvas');
 const ctx = canvas.getContext('2d');
-const canvasSize = Math.min(window.innerWidth, window.innerHeight) * 0.9;
+const canvasSize = Math.min(window.innerWidth, window.innerHeight) * 0.8;
 canvas.width = canvasSize;
 canvas.height = canvasSize;
 
@@ -28,7 +28,7 @@ canvas.addEventListener('click', () => {
 });
 
 function spinWheel() {
-    let spinDuration = Math.random() * 3 + 4; // 4 to 7 seconds
+    let spinDuration = 10; // 10 seconds
     let start = null;
 
     function animate(timestamp) {
@@ -38,7 +38,7 @@ function spinWheel() {
         let easeOutCubic = (t) => --t * t * t + 1;
         let easedProgress = easeOutCubic(Math.min(progress / (spinDuration * 1000), 1));
 
-        let deltaAngle = 10 * easedProgress;
+        let deltaAngle = 10 * (1 - easedProgress);
         rotation += deltaAngle;
 
         drawWheel();
@@ -77,23 +77,27 @@ function drawWheel() {
         ctx.fill();
 
         ctx.fillStyle = 'white';
-        ctx.font = '16px Creepster';
+        ctx.font = `${Math.floor(canvasSize / 30)}px Creepster`;
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
         ctx.rotate(Math.PI / movies.length);
         ctx.fillText(movies[i], canvasSize / 4, 0);
-
         ctx.restore();
     }
 
     ctx.restore();
 
-    // Draw arrow
-    ctx.fillStyle = 'white';
+    ctx.fillStyle = '#000';
     ctx.beginPath();
-    ctx.moveTo(canvasSize / 2 - 10, 0);
-    ctx.lineTo(canvasSize / 2 + 10, 0);
-    ctx.lineTo(canvasSize / 2, 20);
+    ctx.arc(canvasSize / 2, canvasSize / 2, canvasSize / 6, 0, 2 * Math.PI);
+    ctx.closePath();
+    ctx.fill();
+
+    ctx.fillStyle = '#FFF';
+    ctx.beginPath();
+    ctx.moveTo(canvasSize / 2 - canvasSize / 40, 0);
+    ctx.lineTo(canvasSize / 2 + canvasSize / 40, 0);
+    ctx.lineTo(canvasSize / 2, canvasSize / 20);
     ctx.closePath();
     ctx.fill();
 }
