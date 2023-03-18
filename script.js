@@ -31,6 +31,14 @@ function drawWheel() {
         ctx.lineTo(0, 0);
         ctx.fill();
         ctx.closePath();
+
+        ctx.fillStyle = "#000";
+        ctx.textAlign = "center";
+        ctx.textBaseline = "middle";
+        ctx.font = "16px Arial";
+        ctx.rotate((Math.PI + (2 * Math.PI * i) / movies.length) / 2);
+        ctx.fillText(movies[i], canvas.width / 4, 0);
+
         ctx.restore();
     }
 
