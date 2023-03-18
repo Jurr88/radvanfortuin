@@ -1,5 +1,7 @@
 const canvas = document.getElementById('wheelCanvas');
 const ctx = canvas.getContext('2d');
+const canvasSize = 320;
+
 const movies = [
     'The Tunnel',
     'Jeruzalem',
@@ -24,66 +26,74 @@ canvas.addEventListener('click', () => {
 });
 
 function spinWheel() {
-    let targetRotation = rotation + 5 * Math.PI + (Math.random() * 5 * Math.PI);
-    let spinDuration = 10000;
-    let startTimestamp = null;
+    let spinDuration = Math.random() * 3 + 4; // 4 to 7 seconds
+    let start = null;
 
     function animate(timestamp) {
-        if (!startTimestamp) startTimestamp = timestamp;
-        let progress = timestamp - startTimestamp;
-        let easeOutCubic = t => (--t) * t * t + 1;
+        if (!start) start = timestamp;
+        let progress = timestamp - start;
 
-        rotation += (targetRotation - rotation) * easeOutCubic(progress / spinDuration);
+        let easeOutCubic = (t) => --t * t * t + 1;
+        let easedProgress = easeOutCubic(Math.min(progress / (spinDuration * 1000), 1));
 
-        if (progress < spinDuration) {
+        let deltaAngle = 10 * easedProgress;
+        rotation += deltaAngle;
+
+        drawWheel();
+
+        if (progress < spinDuration * 1000) {
             requestAnimationFrame(animate);
         } else {
-            rotation = targetRotation;
             spinning = false;
-            announceSelectedMovie();
+            announceMovie();
         }
     }
 
     requestAnimationFrame(animate);
 }
 
-function announceSelectedMovie() {
-    let selectedMovieIndex = Math.floor((((2 * Math.PI) - (rotation % (2 * Math.PI))) / (2 * Math.PI)) * movies.length);
-    alert('Gefeliciteerd! De geselecteerde film is: ' + movies[selectedMovieIndex]);
+function announceMovie() {
+    let selectedMovieIndex = Math.floor((rotation / 360) * movies.length) % movies.length;
+    let selectedMovie = movies[selectedMovieIndex];
+    alert(`De gekozen film is: ${selectedMovie}`);
 }
 
 function drawWheel() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    ctx.translate(canvas.width / 2, canvas.height / 2);
-    ctx.rotate(rotation);
+    ctx.save();
+    ctx.translate(canvasSize / 2, canvasSize / 2);
+    ctx.rotate((rotation * Math.PI) / 180);
 
     for (let i = 0; i < movies.length; i++) {
         ctx.save();
-        ctx.rotate((2 * Math.PI * i) / movies.length);
-        ctx.fillStyle = i % 2 === 0 ? '#f00' : '#0f0';
+        ctx.rotate((i * 360 / movies.length) * Math.PI / 180);
+        ctx.fillStyle = i % 2 === 0 ? '#666' : '#999';
         ctx.beginPath();
         ctx.moveTo(0, 0);
-        ctx.arc(0, 0, canvas.width / 2, 0, (2 * Math.PI) / movies.length);
-        ctx.lineTo(0, 0);
-        ctx.fill();
+        ctx.arc(0, 0, canvasSize / 2, 0, (2 * Math.PI) / movies.length);
         ctx.closePath();
+        ctx.fill();
 
-        ctx.fillStyle = "#000";
-        ctx.textAlign = "center";
-        ctx.textBaseline = "middle";
-        ctx.font = "bold 14px 'Creepster', cursive";
-        ctx.rotate(((2 * Math.PI) / movies.length) / 2);
-        ctx.fillText(movies[i], canvas.width / 4, 0);
+        ctx.fillStyle = 'white';
+        ctx.font = '16px Creepster';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.rotate(Math.PI / movies.length);
+        ctx.fillText(movies[i], canvasSize / 4, 0);
 
         ctx.restore();
     }
 
-    ctx.setTransform(1, 0, 0, 1, 0, 0);
+    ctx.restore();
+
+    // Draw arrow
+    ctx.fillStyle = 'white';
+    ctx.beginPath();
+    ctx.moveTo(canvasSize / 2 - 10, 0);
+    ctx.lineTo(canvasSize / 2 + 10, 0);
+    ctx.lineTo(canvasSize / 2, 20);
+    ctx.closePath();
+    ctx.fill();
 }
 
-function draw() {
-    drawWheel();
-    requestAnimationFrame(draw);
-}
-
-draw();
+drawWheel();
