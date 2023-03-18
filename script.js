@@ -66,7 +66,7 @@ function drawWheel() {
         ctx.textAlign = "center";
         ctx.textBaseline = "middle";
         ctx.font = "14px Arial";
-        ctx.rotate((Math.PI + (2 * Math.PI * i) / movies.length) / 2);
+        ctx.rotate(((2 * Math.PI) / movies.length) / 2);
         ctx.fillText(movies[i], canvas.width / 4, 0);
 
         ctx.restore();
