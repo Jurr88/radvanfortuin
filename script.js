@@ -55,7 +55,8 @@ function spinWheel() {
 }
 
 function announceMovie() {
-    let selectedMovieIndex = Math.floor((rotation / 360) * movies.length) % movies.length;
+    let normalizedRotation = rotation % 360;
+    let selectedMovieIndex = Math.floor(((360 - normalizedRotation) / 360) * movies.length);
     let selectedMovie = movies[selectedMovieIndex];
     alert(`De gekozen film is: ${selectedMovie}`);
 }
