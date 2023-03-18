@@ -16,59 +16,18 @@ const movies = [
 let rotation = 0;
 let spinning = false;
 
-function drawWheel() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    ctx.translate(canvas.width / 2, canvas.height / 2);
-    ctx.rotate(rotation);
-
-    for (let i = 0; i < movies.length; i++) {
-        ctx.save();
-        ctx.rotate((2 * Math.PI * i) / movies.length);
-        ctx.fillStyle = i % 2 === 0 ? '#f00' : '#0f0';
-        ctx.beginPath();
-        ctx.moveTo(0, 0);
-        ctx.arc(0, 0, canvas.width / 2, 0, (2 * Math.PI) / movies.length);
-        ctx.lineTo(0, 0);
-        ctx.fill();
-        ctx.closePath();
-
-        ctx.fillStyle = "#000";
-        ctx.textAlign = "center";
-        ctx.textBaseline = "middle";
-        ctx.font = "16px Arial";
-        ctx.rotate((Math.PI + (2 * Math.PI * i) / movies.length) / 2);
-        ctx.fillText(movies[i], canvas.width / 4, 0);
-
-        ctx.restore();
-    }
-
-    ctx.setTransform(1, 0, 0, 1, 0, 0);
-}
-
-}
-
-function spinWheel() {
+canvas.addEventListener('click', () => {
     if (!spinning) {
         spinning = true;
-        const targetRotation = rotation + (2 * Math.PI * (3 + Math.random() * 5));
-        const spin = () => {
-            if (rotation < targetRotation) {
-                rotation += (targetRotation - rotation) / 20;
-                drawWheel();
-                requestAnimationFrame(spin);
-            } else {
-                spinning = false;
-            }
-        };
-        spin();
+        spinWheel();
     }
-}
-
-// Click- en touchondersteuning
-canvas.addEventListener('click', spinWheel);
-canvas.addEventListener('touchstart', (e) => {
-    e.preventDefault();
-    spinWheel();
 });
 
-drawWheel();
+function spinWheel() {
+    let targetRotation = rotation + 10 * Math.PI + (Math.random() * 10 * Math.PI);
+    let spinDuration = 5000;
+    let startTimestamp = null;
+
+    function animate(timestamp) {
+        if (!startTimestamp) startTimestamp = timestamp;
+        let progress =
