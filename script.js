@@ -1,16 +1,16 @@
 const canvas = document.getElementById('wheelCanvas');
 const ctx = canvas.getContext('2d');
 const movies = [
-    'Film 1',
-    'Film 2',
-    'Film 3',
-    'Film 4',
-    'Film 5',
-    'Film 6',
-    'Film 7',
-    'Film 8',
-    'Film 9',
-    'Film 10',
+    'The Tunnel',
+    'Jeruzalem',
+    'As Above, So Below',
+    'Afflicted',
+    'Pyramid',
+    'Evil Dead Remake',
+    'Skinamarink',
+    'Creep',
+    'Man bites dog',
+    'REC',
 ];
 
 let rotation = 0;
